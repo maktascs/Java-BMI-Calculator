@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
 
 public class BMI extends JFrame {
 
@@ -52,10 +53,23 @@ public class BMI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	public static boolean  isValidNumber(String value){
+		if(value.length()==0){
+			return false;
+		}
+		for(int i=0;i<value.length();i++){
+			if(  !Character.isDigit(value.charAt(i))){
+				return false;
+				
+			}
+			
+		}	
+		return true;
+	}
 	public BMI() {
 		setTitle("Aktas' BMI Calculator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 306);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -83,23 +97,26 @@ public class BMI extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				try{
+				if(isValidNumber(sheight.getText()) && isValidNumber(sweight.getText())){
 					int sheightv=Integer.parseInt(sheight.getText());
 					int sweightv=Integer.parseInt(sweight.getText());
-					
-					double bmiR2;
+					double bmiR2;					
 					bmiR2=(sweightv/(sheightv*(double)sheightv))*703;
 					DecimalFormat df2=new DecimalFormat("##.##");
 					sbmi.setText(df2.format(bmiR2));
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Please enter valid numbers");
+					
+				}
+					
 				}				
 				
-				catch (NumberFormatException e){
+				
 							
-					JOptionPane.showMessageDialog(null, "Height must be between 36-102 inches\nWeight must be 10-1400 pounds");
-					}	
-							
-			}
+		
 		});
+		
 		button.setBounds(74, 81, 131, 35);
 		panel.add(button);
 		
@@ -107,10 +124,8 @@ public class BMI extends JFrame {
 		lblYourHeightin.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
 		lblYourHeightin.setBounds(10, 12, 115, 23);
 		panel.add(lblYourHeightin);
-		NumberFormatter nfsh=new NumberFormatter();
-		nfsh.setMinimum(new Integer(36));
-		nfsh.setMaximum(new Integer(102));
-		sheight = new JFormattedTextField(nfsh);
+	
+		sheight = new JFormattedTextField();
 		sheight.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -131,10 +146,8 @@ public class BMI extends JFrame {
 		lblYourWeightlbs.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
 		lblYourWeightlbs.setBounds(10, 47, 124, 23);
 		panel.add(lblYourWeightlbs);
-		NumberFormatter nfsw=new NumberFormatter();
-		nfsw.setMaximum(new Integer(10));
-		nfsw.setMaximum(new Integer(1400));
-		sweight = new JFormattedTextField(nfsw);
+
+		sweight = new JFormattedTextField();
 		sweight.setText("10-1400 lbs");
 		sweight.addMouseListener(new MouseAdapter() {
 			@Override
@@ -165,14 +178,14 @@ public class BMI extends JFrame {
 		JButton btnCalculate = new JButton("Calculate BMI");
 		btnCalculate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try{
+				if(isValidNumber(mheight.getText()) && isValidNumber(mweight.getText())){
 				double bmiR;
 				bmiR=(Integer.parseInt(mweight.getText())/(Integer.parseInt(mheight.getText())*(double)Integer.parseInt(mheight.getText())/10000));
 				DecimalFormat df=new DecimalFormat("##.##");
 				mbmi.setText(df.format(bmiR));
 				}
-				catch(NumberFormatException e2){
-					JOptionPane.showMessageDialog(null, "Height must be between 91-260 cm\nWeight must be 4-635 kg");
+				else{
+					JOptionPane.showMessageDialog(null, "Please enter valid numbers");
 					
 				}
 				
@@ -186,10 +199,8 @@ public class BMI extends JFrame {
 		lblYourHeightcm.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
 		lblYourHeightcm.setBounds(10, 12, 115, 23);
 		panel_1.add(lblYourHeightcm);
-		NumberFormatter nfmh=new NumberFormatter();
-		nfmh.setMaximum(new Integer(260));
-		nfmh.setMinimum(new Integer(91));
-		mheight = new JFormattedTextField(nfmh);
+		
+		mheight = new JFormattedTextField();
 		
 		mheight.setBounds(121, 12, 86, 20);
 		panel_1.add(mheight);
@@ -200,10 +211,8 @@ public class BMI extends JFrame {
 		lblYourWeightkg.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
 		lblYourWeightkg.setBounds(10, 47, 124, 23);
 		panel_1.add(lblYourWeightkg);
-		NumberFormatter nfmw=new NumberFormatter();
-		nfmw.setMinimum(new Integer(4));
-		nfmw.setMaximum(new Integer(635));
-		mweight = new JFormattedTextField(nfmw);
+		
+		mweight = new JFormattedTextField();
 		mweight.setBounds(121, 50, 86, 20);
 		panel_1.add(mweight);
 		mweight.setToolTipText("Enter Weight between 4-635 kg");
@@ -228,5 +237,28 @@ public class BMI extends JFrame {
 		txtrBmiCategoriesUnderweight.setText("BMI Categories: \r\nUnderweight = <18.5\r\nNormal weight = 18.5\u201324.9 \r\nOverweight = 25\u201329.9 \r\nObesity = 30 or greater");
 		txtrBmiCategoriesUnderweight.setBounds(215, 11, 184, 155);
 		panel_1.add(txtrBmiCategoriesUnderweight);
+		
+		JLabel lblNewLabel = new JLabel("Powered by Muammer Aktas");
+		lblNewLabel.setForeground(Color.BLUE);
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Muammer Aktas is a beginner programmer.\nTrying to have fun with Java.\nPlease email me (aktastx@gmail.com) if you have any suggestions/complaints/feedback for me.\nThanks");
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblNewLabel.setForeground(getForeground());
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblNewLabel.setForeground(Color.BLUE);
+			}
+		});
+		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		lblNewLabel.setBounds(270, 250, 154, 14);
+		contentPane.add(lblNewLabel);
+		
+		
 	}
 }
